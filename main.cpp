@@ -3,12 +3,31 @@
 #include <vector>
 #include <cstring>
 
-using namespace std;
+#include "HashTable.h"
 
-struct token{
+using namespace std;
+/*
+1. Pass through the data once, collecting a list of token-frequency counts.
+2. Sort the token-frequency counts by frequency, in descending order.
+3. Assign codes to tokens using a simple counter, for example by incrementing over theintegers; this is just to keep things simple.
+4. Store the new mapping (token -> code) in a hashtable called “encoder”.
+5. Store the reverse mapping (code -> token) in a hashtable called "decoder".
+6. Pass through the data a second time. This time, replace all tokens with their codes
+*/
+
+/*
+  Old Struct:
+  
+  struct token
+  {
     int frequency = 1;
     string word = "";
-};
+
+  };
+
+  New one moved to HashTable.h
+*/
+
 
 // Encrypt with file input to file output
 void encrypt(string fileInputName, string fileOutputName);
@@ -64,6 +83,53 @@ int main(){
     return 0;
 }
 
+/*
+void encrypt(string inputFile, string outputFile){
+  ifstream inFS;
+  vector<string> tokens;
+  string currToken;
+  string thingstofind = " ,.-!?;:\"\'()@";
+
+  inFS.open(inputFile);
+
+  if(!inFS.is_open())
+  {
+    cout << "File could not be opened." << endl;
+    return;
+  }
+  else
+  {
+    while (inFS >> currToken)
+    {
+      
+      int startLocation = 0;
+      int endLocation = 0;
+
+      //Ex: cat.dog!frog; string size: 12; 
+      //find_first_of: searches the currToken/string for the first occurence of any punctuation
+      //substr: takes a part of the string using the starting index, then size of the substring as parameters 
+      while (currToken.find_first_of(thingstofind, startLocation) != string::npos)
+      {
+        string punctuation = "";
+        punctuation = currToken.find_first_of(thingstofind, startLocation);
+        endLocation = currToken.at(currToken.find_first_of(thingstofind, startLocation));
+        tokens.push_back(currToken.substr(startLocation, endLocation - startLocation));
+        tokens.push_back(punctuation);
+
+
+        currToken = currToken.substr(endLocation + 1, (currToken.size() - 1) - endLocation);
+      }
+      
+      tokens.push_back(currToken);
+    }
+  }
+
+  inFS.close();
+
+  
+}
+*/
+
 
 
 void encrypt(string inputFile, string outputFile){
@@ -104,4 +170,10 @@ void encrypt(string inputFile, string outputFile){
         tokens.push_back(newtoken);
     }
     
+    
+}
+
+void decrypt(string fileInputName, string fileOutputName)
+{
+
 }
