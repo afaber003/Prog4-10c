@@ -7,9 +7,9 @@
 
 using namespace std;
 
-struct hashtoken
+struct token
 {
-  hashtoken(string w, string c)
+  token(string w, string c)
   {
     word = w;
     code = c;
@@ -30,7 +30,7 @@ class HashTable {
     string getMappedValue(string s) const;
   
   private:
-    list<hashtoken *> *hashtable;
+    list<token *> *hashtable;
     int size;
 };
 
