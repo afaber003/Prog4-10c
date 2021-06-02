@@ -158,7 +158,24 @@ void encrypt(string inputFile, string outputFile, string decoderdatafile) {
     vector<token*> tokens = seperateWords(stufftoEncrypt);
 
     //create encoder
-    sort(tokens.begin(), tokens.end());  //only uses "<" per c++ reference
+    for (token* i : tokens){
+        cout << i->word << ", " << i->frequency << endl;
+    }
+    sort(tokens.begin(), tokens.end());  //only uses "<" per c++ reference for some reason it doesnt sort the last value
+    int j = 0;
+    for (vector<token*>::iterator i = tokens.begin(); i != tokens.end() - 1; i++){
+        if (tokens.back()->frequency < tokens[j]->frequency){
+            token* temp = new token();
+            *temp = *tokens.back();
+            tokens.insert(i, temp);
+            tokens.pop_back();
+            break;
+        }
+        j++;
+    }
+    for (token* i : tokens){
+        cout << i->word << ", " << i->frequency << endl;
+    }
     for (int i = tokens.size() - 1; i >= 0; i--) {
         encoderQueue.push_back(tokens[i]->word);
     }
@@ -237,12 +254,12 @@ void encrypt(string inputFile, string outputFile, string decoderdatafile) {
         return;
     }
     decoderoutput << "Code -> Word" << endl;
-    for (int i = 0; i < tokens.size(); i++) {
+    for (int i = tokens.size() - 1; i >= 0; i--) {
         if (tokens[i]->word == "") {
             break;
         }
         if (tokens[i]->word == "\n"){
-        decoderoutput << "newline" << endl << i << endl;
+        decoderoutput << "newline" << endl << encoder.getMappedValue(tokens[i]->word) << endl;
         continue;
         }
         decoderoutput << encoder.getMappedValue(tokens[i]->word) << " -> " << tokens[i]->word << endl;

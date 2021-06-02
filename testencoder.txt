@@ -1,5 +1,5 @@
 Code -> Word
-3 -> hello
-2 ->  
-1 -> hi
-0 -> there
+0 ->  
+1 -> hello
+2 -> hi
+3 -> -
