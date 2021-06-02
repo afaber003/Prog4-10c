@@ -25,7 +25,7 @@ class HashTable {
  
  public:
     HashTable(int);
-	  int computeHash(const string &) const;
+	int computeHash(const string &) const;
     void insert(string, string);
     string getMappedValue(string s) const;
   
