@@ -1,0 +1,16 @@
+Code -> Word
+0 -> .
+1 ->  
+2 -> blah
+3 -> !
+4 -> '
+5 -> bye
+6 -> meet
+7 -> ,
+8 -> should
+9 -> we
+10 -> think
+11 -> I
+12 -> ;
+13 -> hi
+14 -> hey

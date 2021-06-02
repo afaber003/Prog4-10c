@@ -55,8 +55,8 @@ int main() {
             cout << "Enter the name of the encrypt data output file: ";
             string dataoutput = "";
             cin >> dataoutput;
-            encrypt("testinput.txt", "testoutput.txt", "testencoder.txt");
-        }
+            encrypt(tempinput, tempoutput, dataoutput);
+        }//"testinput.txt", "testoutput.txt", "testencoder.txt"
 
         else if (input == 'q'){
             return 0;
