@@ -38,7 +38,7 @@ void decrypt(string fileInputName, string fileOutputName) {}
 int main() {
     char input = ' ';
 
-    cout << "Type 'e' to encrypt\nType 'd' to decrypt\nMake your selection or 'q' to exit: ";
+    cout << "Type 'e' to encrypt or 'q' to exit: ";
 
     // basically the menu
     while (tolower(input) != 'q') {
@@ -50,23 +50,12 @@ int main() {
             string tempinput = "";
             cin >> tempinput;
             cout << "Enter the name of the output file: ";
-            string tempoutput;
+            string tempoutput = "";
             cin >> tempoutput;
             cout << "Enter the name of the encrypt data output file: ";
-            string dataoutput;
+            string dataoutput = "";
             cin >> dataoutput;
             encrypt("testinput.txt", "testoutput.txt", "testencoder.txt");
-        }
-
-        // Decrypt from file to file
-        else if (input == 'd') {
-            cout << "Enter the name of the input file: ";
-            string tempinput = "";
-            cin >> tempinput;
-            cout << "Enter the name of the output file: ";
-            string tempoutput;
-            cin >> tempoutput;
-            decrypt(tempinput, tempoutput);
         }
 
         else if (input == 'q'){
@@ -146,7 +135,7 @@ topofEncrypt:
     return tokens;
 }
 
-void encrypt(string inputFile, string outputFile, string encoderdatafile) {
+void encrypt(string inputFile, string outputFile, string decoderdatafile) {
     string ans = "";
     string stufftoEncrypt = "";
     vector<string> encoderQueue;  // list of words sorted by frequency
@@ -243,21 +232,22 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile) {
     }
     output << ans;
 
-    ofstream encoderoutput(encoderdatafile);
-    if (!encoderoutput.is_open()) {
-        cout << "Encoder data file failed to open";
+    ofstream decoderoutput(decoderdatafile);
+    if (!decoderoutput.is_open()) {
+        cout << "Decoder data file failed to open";
         return;
     }
+    decoderoutput << "Code -> Word" << endl;
     for (int i = 0; i < tokens.size(); i++) {
         if (tokens[i]->word == "") {
             break;
         }
         if (tokens[i]->word == "\n"){
-        encoderoutput << "newline" << endl << i << endl;
+        decoderoutput << "newline" << endl << i << endl;
         continue;
         }
-        encoderoutput << tokens[i]->word << endl << encoder.getMappedValue(tokens[i]->word) << endl;
+        decoderoutput << encoder.getMappedValue(tokens[i]->word) << " -> " << tokens[i]->word << endl;
     }
-    encoderoutput.close();
+    decoderoutput.close();
     output.close();
 }

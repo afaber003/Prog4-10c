@@ -1,4 +1,5 @@
-hi, 3
- , 2
--, 1
-hello, 0
+Code -> Word
+3 -> hello
+2 ->  
+1 -> hi
+0 -> there
