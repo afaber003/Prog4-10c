@@ -1,5 +1,7 @@
 Code -> Word
 0 ->  
-1 -> hello
-2 -> hi
-3 -> -
+1 -> blah
+2 -> i
+3 -> hi
+4 -> u
+5 -> whatever

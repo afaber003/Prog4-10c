@@ -161,18 +161,23 @@ void encrypt(string inputFile, string outputFile, string decoderdatafile) {
     for (token* i : tokens){
         cout << i->word << ", " << i->frequency << endl;
     }
-    sort(tokens.begin(), tokens.end());  //only uses "<" per c++ reference for some reason it doesnt sort the last value
-    int j = 0;
-    for (vector<token*>::iterator i = tokens.begin(); i != tokens.end() - 1; i++){
-        if (tokens.back()->frequency < tokens[j]->frequency){
-            token* temp = new token();
-            *temp = *tokens.back();
-            tokens.insert(i, temp);
-            tokens.pop_back();
-            break;
+    cout << endl;
+    
+    //sorting
+    bool sorted = false;
+    while (!sorted){
+        sorted = true;
+        for (int i = 0; i < tokens.size() - 1; i++){
+            if (tokens[i]->frequency > tokens[i+1]->frequency){
+                token* temp = tokens[i];
+                tokens[i] = tokens[i+1];
+                tokens[i+1] = temp;
+                sorted = false;
+                break;
+            }
         }
-        j++;
     }
+
     for (token* i : tokens){
         cout << i->word << ", " << i->frequency << endl;
     }
