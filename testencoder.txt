@@ -1,7 +1,16 @@
-Code -> Word
-0 ->  
-1 -> blah
-2 -> i
-3 -> hi
-4 -> u
-5 -> whatever
+Word - > Code
+. -> 0
+  -> 1
+blah -> 2
+! -> 3
+' -> 4
+bye -> 5
+meet -> 6
+, -> 7
+should -> 8
+we -> 9
+think -> 10
+I -> 11
+; -> 12
+hi -> 13
+hey -> 14

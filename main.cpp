@@ -26,7 +26,7 @@ bool operator<(token lefthandside, token righthandside) {
 vector<token*> seperateWords(string fileInput);
 
 // Encrypt with file input to file output
-void encrypt(string fileInputName, string fileOutputName, string encoderdatafile);
+void encrypt(string fileInputName, string fileOutputName, string encoderdatafile, string decoderdatafile);
 
 // Decrypt with file input and file output
 void decrypt(string fileInputName, string fileOutputName) {}
@@ -53,9 +53,12 @@ int main() {
             string tempoutput = "";
             cin >> tempoutput;
             cout << "Enter the name of the encrypt data output file: ";
-            string dataoutput = "";
-            cin >> dataoutput;
-            encrypt(tempinput, tempoutput, dataoutput);
+            string encodeoutput = "";
+            cin >> encodeoutput;
+            cout << "Enter the name of the decrypt data output file: ";
+            string decodeoutput = "";
+            cin >> decodeoutput;
+            encrypt(tempinput, tempoutput, encodeoutput, decodeoutput);
         }//"testinput.txt", "testoutput.txt", "testencoder.txt"
 
         else if (input == 'q'){
@@ -135,7 +138,7 @@ topofEncrypt:
     return tokens;
 }
 
-void encrypt(string inputFile, string outputFile, string decoderdatafile) {
+void encrypt(string inputFile, string outputFile, string encoderdatafile, string decoderdatafile) {
     string ans = "";
     string stufftoEncrypt = "";
     vector<string> encoderQueue;  // list of words sorted by frequency
@@ -187,8 +190,10 @@ void encrypt(string inputFile, string outputFile, string decoderdatafile) {
 
     //creates the encoded hashtable
     HashTable encoder(1000);
+    HashTable decoder (1000);
     for (int i = 0; i < encoderQueue.size(); i++) {
         encoder.insert(encoderQueue.at(i), to_string(i));
+        decoder.insert(to_string(i), encoderQueue.at(i));
     }
     
 
@@ -254,6 +259,7 @@ void encrypt(string inputFile, string outputFile, string decoderdatafile) {
     output << ans;
 
     ofstream decoderoutput(decoderdatafile);
+    ofstream encoderoutput(encoderdatafile);
     if (!decoderoutput.is_open()) {
         cout << "Decoder data file failed to open";
         return;
@@ -269,6 +275,23 @@ void encrypt(string inputFile, string outputFile, string decoderdatafile) {
         }
         decoderoutput << encoder.getMappedValue(tokens[i]->word) << " -> " << tokens[i]->word << endl;
     }
+
+    encoderoutput << "Word - > Code" << endl;
+    for (int i = tokens.size() - 1; i >= 0; i--) {
+        if (tokens[i]->word == "") {
+            break;
+        }
+        if (tokens[i]->word == "\n"){
+        encoderoutput << "newline" << endl << encoder.getMappedValue(tokens[i]->word) << endl;
+        continue;
+        }
+        encoderoutput << tokens[i]->word << " -> " << encoder.getMappedValue(tokens[i]->word) << endl;
+    }
+
+    encoderoutput.close();
     decoderoutput.close();
     output.close();
+    
+      
+    
 }
