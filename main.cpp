@@ -66,7 +66,7 @@ int main() {
             cout << "That was not one of the choices" << endl;
         }
 
-        cout << "Type 'e' to encrypt\nType 'd' to decrypt\nMake your selection or 'q' to exit: ";
+        cout << "Type 'e' to encrypt or 'q' to exit: ";
     }
 
     return 0;
@@ -173,7 +173,6 @@ void encrypt(string inputFile, string outputFile, string decoderdatafile) {
     
     // Subtitution
     vector<string*> finalQueue;
-
 /************************************************/
 
     //list of words that appear in the string
