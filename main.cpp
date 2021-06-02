@@ -69,6 +69,10 @@ int main() {
             decrypt(tempinput, tempoutput);
         }
 
+        else if (input == 'q'){
+            return 0;
+        }
+
         else {
             cout << "That was not one of the choices" << endl;
         }
@@ -90,7 +94,8 @@ vector<token*> seperateWords(string stufftoEncrypt) {
     //list of words that appear in the string
     string thingstofind = " ,.-!?;:\"\'()@\n";
     unsigned location = 0;
-afewlinesup:
+    unsigned location2 = location;
+/*afewlinesup:
     for (char i : thingstofind) {  //check for start with punctuation
         if (stufftoEncrypt[location] == i) {
             location++;
@@ -100,25 +105,30 @@ afewlinesup:
             goto afewlinesup;
         }
     }
-    unsigned location2 = location;
-
+*/
 //partitioning of big string into tokens
 topofEncrypt:
-    while (stufftoEncrypt.find_first_of(thingstofind, location) < stufftoEncrypt.size()) {
+    while (stufftoEncrypt.find_first_of(thingstofind, location) != string::npos) {
         token* newtoken = new token();
-    afewlinesup2:
         for (char i : thingstofind) {  //check for punctuation
             if (stufftoEncrypt[location] == i) {
                 location++;
-                token* newertoken = new token;
-                newertoken->word = (stufftoEncrypt[location - 1]);
-                tokens.push_back(newertoken);
-                goto afewlinesup2;
+                newtoken->word = stufftoEncrypt.substr(location-1, 1);
+                //checking to see if its already there
+                for (token* i : tokens){
+                    if (newtoken->word == i->word){
+                        i->frequency += 1;
+                        delete newtoken;
+                        goto topofEncrypt;
+                    }
+                }
+                tokens.push_back(newtoken);
+                goto topofEncrypt;
             }
         }
         location2 = stufftoEncrypt.find_first_of(thingstofind, location);
-        newtoken->word = stufftoEncrypt.substr(location, stufftoEncrypt.find_first_of(thingstofind, location) - location);
-        location = location2 + 1;
+        newtoken->word = stufftoEncrypt.substr(location, location2 - location);
+        location = location2;
         //checking for if its already in the list of tokens
         for (unsigned i = 0; i < tokens.size(); i++) {
             if (newtoken->word == tokens[i]->word) {
@@ -130,8 +140,11 @@ topofEncrypt:
         tokens.push_back(newtoken);
     }
 
+    if (location >= stufftoEncrypt.size()){
+        return tokens;
+    }
     token* n = new token();
-    n->word = stufftoEncrypt.substr(location, stufftoEncrypt.size() - location);
+    n->word = stufftoEncrypt.substr(location);
     for (unsigned i = 0; i < tokens.size(); i++) {  //end case
         if (n->word == tokens[i]->word) {
             tokens[i]->frequency += 1;
@@ -146,19 +159,19 @@ topofEncrypt:
 void encrypt(string inputFile, string outputFile, string encoderdatafile) {
     string ans = "";
     string stufftoEncrypt = "";
-    vector<string> encoderQueue; // list of words sorted by frequency
+    vector<string> encoderQueue;  // list of words sorted by frequency
 
     // reading file
     ifstream input;
     input.open(inputFile);
     if (!input.is_open()) {
-        cout << "File failed to open";
+        cout << "File failed to open" << endl;
         return;
     }
     string tem = "";
     while (!input.eof()) {
         getline(input, tem);
-        stufftoEncrypt += tem + "\n";
+        stufftoEncrypt += tem;
     }
     input.close();
 
@@ -178,6 +191,8 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile) {
     }
 
     //TODO: create the substitution in stufftoEncrypt
+    
+
 
     //We can maybe implement decode like this
     /*
@@ -207,7 +222,12 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile) {
         if (tokens[i]->word == "") {
             break;
         }
-        encoderoutput << tokens[i] << ", " << i + 1 << endl;
+        if (tokens[i]->word == "\n"){
+        encoderoutput << "newline" << ", " << i + 1 << endl;
+        continue;
+        }
+        encoderoutput << tokens[i]->word << ", " << i + 1 << endl;
+        cout << int(tokens[i]->word[0]) << endl;
     }
     encoderoutput.close();
     output.close();

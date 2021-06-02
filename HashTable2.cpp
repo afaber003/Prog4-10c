@@ -8,7 +8,7 @@ using namespace std;
 HashTable::HashTable(int s)
 {
   size = s;
-  hashtable = new list<token*>[size];
+  hashtable = new list<hashtoken*>[size];
 }
 
 int HashTable::computeHash(const string& s) const
@@ -37,7 +37,7 @@ void HashTable::insert(string putWord, string putCode)
     }
 
   }
-  token *newToken = new token(putWord, putCode);
+  hashtoken *newToken = new hashtoken(putWord, putCode);
   hashtable[putIndex].push_back(newToken);
 }
 
