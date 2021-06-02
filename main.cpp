@@ -95,17 +95,7 @@ vector<token*> seperateWords(string stufftoEncrypt) {
     string thingstofind = " ,.-!?;:\"\'()@\n";
     unsigned location = 0;
     unsigned location2 = location;
-/*afewlinesup:
-    for (char i : thingstofind) {  //check for start with punctuation
-        if (stufftoEncrypt[location] == i) {
-            location++;
-            token* newertoken = new token;
-            newertoken->word = (stufftoEncrypt[location - 1]);
-            tokens.push_back(newertoken);
-            goto afewlinesup;
-        }
-    }
-*/
+
 //partitioning of big string into tokens
 topofEncrypt:
     while (stufftoEncrypt.find_first_of(thingstofind, location) != string::npos) {
@@ -189,17 +179,57 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile) {
     for (int i = 0; i < encoderQueue.size(); i++) {
         encoder.insert(encoderQueue.at(i), to_string(i));
     }
-
-    //TODO: create the substitution in stufftoEncrypt
     
+
+    
+    // Subtitution
+    vector<string*> finalQueue;
+
+/************************************************/
+
+    //list of words that appear in the string
+    string thingstofind = " ,.-!?;:\"\'()@\n";
+    unsigned location = 0;
+    unsigned location2 = location;
+
+    //partitioning of big string into tokens
+    repeat:
+    while (stufftoEncrypt.find_first_of(thingstofind, location) != string::npos) {
+        string* newstring = new string;
+        for (char i : thingstofind) {  //check for punctuation
+            if (stufftoEncrypt[location] == i) {
+                location++;
+                *newstring = stufftoEncrypt.substr(location-1, 1);
+                finalQueue.push_back(newstring);
+                goto repeat;
+            }
+        }
+        location2 = stufftoEncrypt.find_first_of(thingstofind, location);
+        *newstring = stufftoEncrypt.substr(location, location2 - location);
+        location = location2;
+        finalQueue.push_back(newstring);
+    }
+
+    string* n = new string;
+    if (location >= stufftoEncrypt.size()){
+        delete n;
+        goto endd;
+    }
+    *n = stufftoEncrypt.substr(location);
+    finalQueue.push_back(n);
+    endd:
+/************************************************/
+    for (string* i : finalQueue){
+        ans += encoder.getMappedValue(*i);
+    }
 
 
     //We can maybe implement decode like this
     /*
         HashTable decoder(1000);
         for (int i = 0; i < encoderQueue.size(); i++){
-          //hashtoken* newhashtoken = new hashtoken(encoderQueue.at(i), to_string(i));
-          //newhashtoken->word = tokens[i]->word;
+          hashtoken* newhashtoken = new hashtoken(encoderQueue.at(i), to_string(i));
+          newhashtoken->word = tokens[i]->word;
 
           decoder.insert(to_string(i), encoderQueue.at(i));
     }
@@ -211,7 +241,7 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile) {
         cout << "Output file failed to open";
         return;
     }
-    output << stufftoEncrypt;
+    output << ans;
 
     ofstream encoderoutput(encoderdatafile);
     if (!encoderoutput.is_open()) {
@@ -223,11 +253,10 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile) {
             break;
         }
         if (tokens[i]->word == "\n"){
-        encoderoutput << "newline" << ", " << i + 1 << endl;
+        encoderoutput << "newline" << endl << i << endl;
         continue;
         }
-        encoderoutput << tokens[i]->word << ", " << i + 1 << endl;
-        cout << int(tokens[i]->word[0]) << endl;
+        encoderoutput << tokens[i]->word << endl << encoder.getMappedValue(tokens[i]->word) << endl;
     }
     encoderoutput.close();
     output.close();
