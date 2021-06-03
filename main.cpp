@@ -193,7 +193,7 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
     HashTable decoder (1000);
     for (int i = 0; i < encoderQueue.size(); i++) {
         encoder.insert(encoderQueue.at(i), to_string(i));
-        decoder.insert(encoderQueue.at(i), to_string(i));
+        decoder.insert(to_string(i), encoderQueue.at(i));
     }
     
 
@@ -249,6 +249,7 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
           decoder.insert(to_string(i), encoderQueue.at(i));
     }
 */
+//void encrypt(string inputFile, string outputFile, string encoderdatafile, string decoderdatafile)
 
     // print out files
     ofstream output(outputFile);
@@ -265,7 +266,7 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
         return;
     }
     decoderoutput << "Code -> Word" << endl;
-    for (int i = tokens.size() - 1; i >= 0; i--) {
+    for (int i = 0; i <= tokens.size() - 1; i++) {
         if (tokens[i]->word == "") {
             break;
         }
@@ -273,7 +274,7 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
         decoderoutput << "newline" << endl << decoder.getMappedValue(tokens[i]->word) << endl;
         continue;
         }
-        decoderoutput << decoder.getMappedValue(tokens[i]->word) << " -> " << tokens[i]->word << endl;
+        decoderoutput <<  to_string(i) << " -> " << decoder.getMappedValue(to_string(i)) << endl;
     }
 
     encoderoutput << "Word - > Code" << endl;
