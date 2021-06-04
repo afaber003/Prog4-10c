@@ -59,9 +59,9 @@ int main() {
             string decodeoutput = "";
             cin >> decodeoutput;
             encrypt(tempinput, tempoutput, encodeoutput, decodeoutput);
-        }//"testinput.txt", "testoutput.txt", "testencoder.txt"
+        }  //"testinput.txt", "testoutput.txt", "testencoder.txt"
 
-        else if (input == 'q'){
+        else if (input == 'q') {
             return 0;
         }
 
@@ -95,10 +95,10 @@ topofEncrypt:
         for (char i : thingstofind) {  //check for punctuation
             if (stufftoEncrypt[location] == i) {
                 location++;
-                newtoken->word = stufftoEncrypt.substr(location-1, 1);
+                newtoken->word = stufftoEncrypt.substr(location - 1, 1);
                 //checking to see if its already there
-                for (token* i : tokens){
-                    if (newtoken->word == i->word){
+                for (token* i : tokens) {
+                    if (newtoken->word == i->word) {
                         i->frequency += 1;
                         delete newtoken;
                         goto topofEncrypt;
@@ -122,7 +122,7 @@ topofEncrypt:
         tokens.push_back(newtoken);
     }
 
-    if (location >= stufftoEncrypt.size()){
+    if (location >= stufftoEncrypt.size()) {
         return tokens;
     }
     token* n = new token();
@@ -161,16 +161,15 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
     // Partitioning
     vector<token*> tokens = seperateWords(stufftoEncrypt);
 
-    
     //sorting
     bool sorted = false;
-    while (!sorted){
+    while (!sorted) {
         sorted = true;
-        for (int i = 0; i < tokens.size() - 1; i++){
-            if (tokens[i]->frequency > tokens[i+1]->frequency){
+        for (int i = 0; i < tokens.size() - 1; i++) {
+            if (tokens[i]->frequency > tokens[i + 1]->frequency) {
                 token* temp = tokens[i];
-                tokens[i] = tokens[i+1];
-                tokens[i+1] = temp;
+                tokens[i] = tokens[i + 1];
+                tokens[i + 1] = temp;
                 sorted = false;
                 break;
             }
@@ -184,31 +183,29 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
 
     //creates the encoded hashtable
     HashTable encoder(1000);
-    HashTable decoder (1000);
+    HashTable decoder(1000);
     for (int i = 0; i < encoderQueue.size(); i++) {
         encoder.insert(encoderQueue.at(i), to_string(i));
         decoder.insert(to_string(i), encoderQueue.at(i));
     }
-    
 
-    
     // Subtitution
     vector<string*> finalQueue;
-/************************************************/
+    /************************************************/
 
     //list of words that appear in the string
     string thingstofind = " ,.-!?;:\"\'()@\n";
     unsigned location = 0;
     unsigned location2 = location;
 
-    //partitioning of big string into tokens
-    repeat:
+//partitioning of big string into tokens
+repeat:
     while (stufftoEncrypt.find_first_of(thingstofind, location) != string::npos) {
         string* newstring = new string;
         for (char i : thingstofind) {  //check for punctuation
             if (stufftoEncrypt[location] == i) {
                 location++;
-                *newstring = stufftoEncrypt.substr(location-1, 1);
+                *newstring = stufftoEncrypt.substr(location - 1, 1);
                 finalQueue.push_back(newstring);
                 goto repeat;
             }
@@ -220,15 +217,15 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
     }
 
     string* n = new string;
-    if (location >= stufftoEncrypt.size()){
+    if (location >= stufftoEncrypt.size()) {
         delete n;
         goto endd;
     }
     *n = stufftoEncrypt.substr(location);
     finalQueue.push_back(n);
-    endd:
-/************************************************/
-    for (string* i : finalQueue){
+endd:
+    /************************************************/
+    for (string* i : finalQueue) {
         ans += encoder.getMappedValue(*i);
     }
 
@@ -251,9 +248,9 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
         if (tokens[i]->word == "") {
             break;
         }
-        if (tokens[i]->word == "\n"){
-        decoderoutput << "newline" << ", " << decoder.getMappedValue(tokens[i]->word) << endl;
-        continue;
+        if (decoder.getMappedValue(to_string(i)) == "\n") {
+            decoderoutput << to_string(i) << " -> " << "newline"  << endl;
+            continue;
         }
         decoderoutput <<  to_string(i) << " -> " << decoder.getMappedValue(to_string(i)) << endl;
     }
@@ -263,9 +260,9 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
         if (tokens[i]->word == "") {
             break;
         }
-        if (tokens[i]->word == "\n"){
-        encoderoutput << "newline" << ", " << encoder.getMappedValue(tokens[i]->word) << endl;
-        continue;
+        if (tokens[i]->word == "\n") {
+            encoderoutput << "newline" << " -> " << encoder.getMappedValue(tokens[i]->word) << endl;
+            continue;
         }
         encoderoutput << tokens[i]->word << " -> " << encoder.getMappedValue(tokens[i]->word) << endl;
     }
@@ -273,7 +270,4 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
     encoderoutput.close();
     decoderoutput.close();
     output.close();
-    
-      
-    
 }
