@@ -88,7 +88,7 @@ vector<token*> seperateWords(string stufftoEncrypt) {
     unsigned location = 0;
     unsigned location2 = location;
 
-//partitioning of big string into tokens
+    //partitioning of big string into tokens
 topofEncrypt:
     while (stufftoEncrypt.find_first_of(thingstofind, location) != string::npos) {
         token* newtoken = new token();
@@ -153,18 +153,14 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
     string tem = "";
     while (!input.eof()) {
         getline(input, tem);
-        stufftoEncrypt += tem;
+        stufftoEncrypt += tem + '\n';
     }
+    stufftoEncrypt.pop_back();
     input.close();
 
     // Partitioning
     vector<token*> tokens = seperateWords(stufftoEncrypt);
 
-    //create encoder
-    for (token* i : tokens){
-        cout << i->word << ", " << i->frequency << endl;
-    }
-    cout << endl;
     
     //sorting
     bool sorted = false;
@@ -181,9 +177,7 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
         }
     }
 
-    for (token* i : tokens){
-        cout << i->word << ", " << i->frequency << endl;
-    }
+    //create encoder
     for (int i = tokens.size() - 1; i >= 0; i--) {
         encoderQueue.push_back(tokens[i]->word);
     }
@@ -238,19 +232,6 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
         ans += encoder.getMappedValue(*i);
     }
 
-
-    //We can maybe implement decode like this
-    /*
-        HashTable decoder(1000);
-        for (int i = 0; i < encoderQueue.size(); i++){
-          hashtoken* newhashtoken = new hashtoken(encoderQueue.at(i), to_string(i));
-          newhashtoken->word = tokens[i]->word;
-
-          decoder.insert(to_string(i), encoderQueue.at(i));
-    }
-*/
-//void encrypt(string inputFile, string outputFile, string encoderdatafile, string decoderdatafile)
-
     // print out files
     ofstream output(outputFile);
     if (!output.is_open()) {
@@ -271,7 +252,7 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
             break;
         }
         if (tokens[i]->word == "\n"){
-        decoderoutput << "newline" << endl << decoder.getMappedValue(tokens[i]->word) << endl;
+        decoderoutput << "newline" << ", " << decoder.getMappedValue(tokens[i]->word) << endl;
         continue;
         }
         decoderoutput <<  to_string(i) << " -> " << decoder.getMappedValue(to_string(i)) << endl;
@@ -283,7 +264,7 @@ void encrypt(string inputFile, string outputFile, string encoderdatafile, string
             break;
         }
         if (tokens[i]->word == "\n"){
-        encoderoutput << "newline" << endl << encoder.getMappedValue(tokens[i]->word) << endl;
+        encoderoutput << "newline" << ", " << encoder.getMappedValue(tokens[i]->word) << endl;
         continue;
         }
         encoderoutput << tokens[i]->word << " -> " << encoder.getMappedValue(tokens[i]->word) << endl;
